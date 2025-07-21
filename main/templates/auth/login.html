@@ -1,0 +1,79 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en" class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    {% tailwind_css %}
+  </head>
+  <body class=" bg-zinc-900 text-white flex items-center justify-center min-h-screen px-4">
+    <div class="bg-zinc-800 p-8 rounded-2xl shadow-xl border border-zinc-700 w-full max-w-sm">
+      <!-- Heading -->
+      <h1 class="text-3xl font-bold text-center text-white mb-6 tracking-tight">
+        Welcome Back
+      </h1>
+      <p class="text-center text-zinc-400 text-sm mb-6">Sign in to continue</p>
+
+      <!-- Form -->
+      <form method="POST" action="{% url 'login' %}" class="space-y-5">
+        {% csrf_token %}
+
+        <!-- Username -->
+        <div>
+          <label for="username" class="block text-sm font-medium text-zinc-300 mb-1">
+            Username
+          </label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="Enter username"
+            required
+            class="w-full px-4 py-2 rounded-lg bg-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label for="password" class="block text-sm font-medium text-zinc-300 mb-1">
+            Password
+          </label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="Enter password"
+            required
+            class="w-full px-4 py-2 rounded-lg bg-zinc-700 text-white placeholder-zinc-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
+
+        <!-- Login Button -->
+        <button
+          type="submit"
+          class="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg shadow transition duration-200"
+        >
+          Login
+        </button>
+
+        <!-- Flash Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="text-sm text-red-500 mt-2 text-center">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      </form>
+
+      <!-- Footer -->
+      <p class="text-center text-sm text-zinc-400 mt-6">
+        Don’t have an account?
+        <a href="{% url 'register' %}" class="text-blue-400 hover:underline font-medium">
+          Register
+        </a>
+      </p>
+    </div>
+  </body>
+</html>

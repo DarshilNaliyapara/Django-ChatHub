@@ -1,0 +1,108 @@
+{% extends 'app.html' %}
+{% block title %}Index Page{% endblock %}
+{% block content %}
+
+<div class="bg-black text-gray-100 min-h-[91.3vh] flex flex-col">
+  <!-- Grid Layout -->
+  <div class="flex gap-2 flex-grow overflow-hidden px-3 py-4">
+    <!-- Left: Conversation List -->
+    <div class="w-1/2 overflow-y-auto pr-2">
+      <form method="GET" action="{% url 'index' %}">
+        <div class="bg-zinc-900 rounded-2xl shadow-md p-4 mb-4">
+          <input
+            id="search"
+            type="text"
+            name="q"
+            placeholder="Search..."
+            value="{{ request.GET.q|default_if_none:'' }}"
+            class="w-full bg-zinc-800 text-white placeholder-gray-400 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-neutral-500 transition duration-200"
+          />
+        </div>
+      </form>
+
+      {% for conversation in conversations %}
+      <a href="{% url 'getConversation' conversation.conversation_username %}">
+        <div class="p-4 bg-zinc-900 rounded-lg mb-3 shadow hover:bg-zinc-800">
+          <h2 class="text-xl font-semibold text-blue-400">
+            {{ conversation.conversation_name }}
+          </h2>
+          {% if conversation.latest_message %}
+          <p
+            class="text-sm text-gray-300 truncate overflow-hidden text-ellipsis whitespace-nowrap"
+          >
+            <strong class="text-blue-500">
+              {% if conversation.latest_message.user == request.user %}
+              You
+              {% else %}
+              {{ conversation.latest_message.user.first_name|default:conversation.latest_message.user.username }}
+              {% endif %}
+            </strong>:
+            {{ conversation.latest_message.body }}
+          </p>
+
+          {% else %}
+          <p class="text-sm text-gray-500 italic">No messages yet</p>
+          {% endif %}
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+
+    <!-- Right: Message View Placeholder -->
+    {% url 'index' as index_url %}
+    {% if request.path == index_url %}
+    <div
+      class="flex w-full flex-col max-h-[88vh] bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 justify-center items-center overflow-auto"
+    >
+      <p
+        class="bg-white/20 text-white px-4 py-2 rounded-full text-sm font-medium shadow"
+      >
+        Select Conversation
+      </p>
+    </div>
+    {% endif %}
+    {% block message %}{% endblock %}
+  </div>
+</div>
+
+<!-- Delete Handler -->
+<script>
+  const csrfToken = "{{ csrf_token }}";
+
+  function deleteConversation(conversationId) {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#16a34a",
+      cancelButtonColor: "#b91c1c",
+      confirmButtonText: "Yes, delete it!",
+      willOpen: () => {
+        const popup = document.querySelector(".swal2-popup");
+        if (popup) {
+          Object.assign(popup.style, {
+            borderRadius: "20px",
+            background: "rgba(0, 0, 0, 0.7)",
+            color: "#fff",
+            backdropFilter: "blur(15px)",
+          });
+        }
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        fetch(`c/delete/${conversationId}`, {
+          method: "POST",
+          headers: { "X-CSRFToken": csrfToken },
+        }).then((response) => {
+          if (response.ok) {
+            location.href = "{% url 'index' %}";
+          } else {
+            Swal.fire("Error!", "Something went wrong.", "error");
+          }
+        });
+      }
+    });
+  }
+</script>
+{% endblock %}
