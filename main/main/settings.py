@@ -1,4 +1,5 @@
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -65,14 +66,13 @@ WSGI_APPLICATION = 'main.wsgi.application'
 
 
 DATABASES = {
-     
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ChatRoom',
-        'USER': 'darshil',
-        'PASSWORD': 'dar/root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": "localhost",
+        "PORT": "3306",
     }
 }
 
