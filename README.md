@@ -27,7 +27,7 @@ A clean and minimal group chat app built using **Django**, **Tailwind CSS**, and
 | Backend     | Django 4.3               |
 | Frontend    | Tailwind CSS, Alpine.js  |
 | Templating  | Django Templates         |
-| Database    | SQLite (default)         |
+| Database    | MySql (default)          |
 | Environment | Python 3.12+, Arch Linux |
 
 ---
