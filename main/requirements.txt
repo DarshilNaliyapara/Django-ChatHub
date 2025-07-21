@@ -4,4 +4,5 @@ django-browser-reload==1.18.0
 django-tailwind==4.2.0
 honcho==2.0.0
 pymysql==1.1.1
+python-decouple==3.8
 sqlparse==0.5.3
