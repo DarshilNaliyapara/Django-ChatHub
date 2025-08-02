@@ -8,13 +8,12 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
       matrix:
-<<<<<<< HEAD
-        python-version: [3.9]
+        python-version: [3.12]
+
     services:
       mysql:
         image: mysql:8.0
@@ -25,27 +24,32 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
-        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
-=======
-        python-version: [3.12]
->>>>>>> e9ae368531067a0e91d7786f6116f6f7ceb5fce4
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=5
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install Dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r main/requirements.txt
-    - name: Run Tests
-      run: |
-        cd main
-        python manage.py test
-      env:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r main/requirements.txt
+
+      - name: Wait for DB to be ready
+        run: |
+          sudo apt-get install -y mysql-client
+          until mysql -h 127.0.0.1 -P 3306 -u test_user -ptest_password -e "SELECT 1"; do sleep 1; done
+
+      - name: Run Tests
+        run: |
+          cd main
+          python manage.py test
+        env:
           DB_NAME: test_db
           DB_USER: test_user
           DB_PASSWORD: test_password
-
+         
