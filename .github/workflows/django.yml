@@ -14,6 +14,17 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.9]
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: test_user
+          MYSQL_PASSWORD: test_password
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
     - uses: actions/checkout@v4
@@ -27,4 +38,10 @@ jobs:
         pip install -r main/requirements.txt
     - name: Run Tests
       run: |
+        cd main
         python manage.py test
+      env:
+          DB_NAME: test_db
+          DB_USER: test_user
+          DB_PASSWORD: test_password
+
