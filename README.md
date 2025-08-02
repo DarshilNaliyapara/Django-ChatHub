@@ -1,7 +1,7 @@
 # 🧩 Django ChatHub
 
 [![Python Version](https://img.shields.io/badge/python-3.12+-blue)]()
-[![Django Version](https://img.shields.io/badge/django-4.3-blue)]()
+[![Django Version](https://img.shields.io/badge/django-5.2-blue)]()
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)]()
 
 
@@ -24,7 +24,7 @@ A clean and minimal group chat app built using **Django**, **Tailwind CSS**, and
 
 | Component   | Technology               |
 | ----------- | ------------------------ |
-| Backend     | Django 4.3               |
+| Backend     | Django 5.2               |
 | Frontend    | Tailwind CSS, Alpine.js  |
 | Templating  | Django Templates         |
 | Database    | MySql (default)          |
